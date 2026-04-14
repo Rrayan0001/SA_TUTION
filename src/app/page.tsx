@@ -79,27 +79,27 @@ export default async function Home({ searchParams }: HomeProps) {
             {[
               {
                 color: "bg-emerald-100 border-emerald-200",
-                title: "Green",
+                title: "Full",
                 description: "All students present."
               },
               {
                 color: "bg-amber-100 border-amber-200",
-                title: "Yellow",
+                title: "Partial",
                 description: "Some students absent."
               },
               {
                 color: "bg-rose-100 border-rose-200",
-                title: "Red",
+                title: "Low",
                 description: "Attendance < 60%."
               },
               {
                 color: "bg-sky-100 border-sky-200",
-                title: "Blue",
+                title: "Recorded",
                 description: "Attendance exists."
               },
               {
                 color: "bg-slate-100 border-slate-200",
-                title: "Gray",
+                title: "Empty",
                 description: "No attendance data."
               }
             ].map((item) => (

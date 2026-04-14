@@ -163,7 +163,7 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
                     <Pencil className="h-4 w-4" />
                     Edit
                   </Button>
-                  <Button variant="destructive" onClick={() => setDeleting(student)}>
+                  <Button variant="outline" onClick={() => setDeleting(student)}>
                     <Trash2 className="h-4 w-4" />
                     Delete
                   </Button>
@@ -224,14 +224,14 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
               This removes the student and all linked attendance entries. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-[22px] bg-rose-50 p-4 text-sm text-rose-700">
+          <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             {deleting?.name} will be removed from the dashboard, reports, and attendance history.
           </div>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setDeleting(null)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={deleteStudent} disabled={saving}>
+            <Button variant="default" onClick={deleteStudent} disabled={saving}>
               {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
               Confirm Delete
             </Button>

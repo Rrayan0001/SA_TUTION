@@ -106,8 +106,8 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
           </div>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: "Present", value: summary.present, tone: "text-emerald-600" },
-              { label: "Absent", value: summary.absent, tone: "text-rose-600" },
+              { label: "Present", value: summary.present, tone: "text-slate-900" },
+              { label: "Absent", value: summary.absent, tone: "text-slate-700" },
               { label: "Pending", value: summary.pending, tone: "text-slate-500" }
             ].map((item) => (
               <div key={item.label} className="rounded-[20px] bg-slate-50 px-4 py-3 text-center">
@@ -133,14 +133,14 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
                 <div className="flex items-center gap-3">
                   <Button
                     type="button"
-                    variant={status === "present" ? "success" : "secondary"}
+                    variant={status === "present" ? "default" : "secondary"}
                     onClick={() => setStatus(student.id, "present")}
                   >
                     Present
                   </Button>
                   <Button
                     type="button"
-                    variant={status === "absent" ? "danger" : "secondary"}
+                    variant={status === "absent" ? "warning" : "secondary"}
                     onClick={() => setStatus(student.id, "absent")}
                   >
                     Absent

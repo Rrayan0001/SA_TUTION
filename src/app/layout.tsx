@@ -12,8 +12,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Tuition Attendance Manager",
-  description: "Premium tuition attendance management dashboard built with Next.js and Prisma."
+  title: "Lumina | Educational Intelligence",
+  description: "A premium, monochrome intelligence dashboard for modern tuition management."
 };
 
 export default function RootLayout({

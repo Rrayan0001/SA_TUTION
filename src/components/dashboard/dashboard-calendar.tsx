@@ -37,10 +37,10 @@ type DashboardCalendarProps = {
 };
 
 const toneStyles: Record<MonthDayStats["tone"], string> = {
-  green: "border-emerald-200 bg-emerald-50/80 text-emerald-900",
-  yellow: "border-amber-200 bg-amber-50/80 text-amber-900",
-  red: "border-rose-200 bg-rose-50/80 text-rose-900",
-  blue: "border-sky-200 bg-sky-50/80 text-sky-900"
+  green: "border-emerald-200 bg-emerald-50/85 text-emerald-950",
+  yellow: "border-amber-200 bg-amber-50/85 text-amber-950",
+  red: "border-rose-200 bg-rose-50/85 text-rose-950",
+  blue: "border-sky-200 bg-sky-50/85 text-sky-950"
 };
 
 export function DashboardCalendar({
@@ -118,7 +118,7 @@ export function DashboardCalendar({
                     isUpcoming 
                       ? "cursor-not-allowed opacity-50 bg-slate-50/40 text-slate-400"
                       : "hover:-translate-y-1 hover:shadow-soft"
-                  } ${isToday ? "ring-2 ring-indigo-500 ring-offset-1 sm:ring-offset-2" : ""} ${
+                  } ${isToday ? "ring-2 ring-slate-900 ring-offset-1 sm:ring-offset-2" : ""} ${
                     day.inMonth
                       ? attendance
                         ? toneStyles[attendance.tone]
