@@ -86,18 +86,27 @@ export function DashboardCalendar({
           </div>
         </CardHeader>
         <CardContent className="p-3 sm:p-4 text-slate-900">
-          <div className="mb-4 grid grid-cols-7 gap-2 px-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+          <div className="mb-3 grid grid-cols-7 gap-1 px-1 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:mb-4 sm:gap-2 sm:px-2 sm:text-xs sm:tracking-[0.25em]">
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
               <div key={day} className="py-2">
-                {day}
+                <span className="sm:hidden">{day.slice(0, 1)}</span>
+                <span className="hidden sm:inline">{day}</span>
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {days.map((day) => {
               const attendance = statsMap.get(day.key);
               const isUpcoming = todayDate ? day.key > todayDate : false;
               const isToday = day.key === todayDate;
+              const mobileTone = attendance
+                ? {
+                    green: "bg-emerald-500",
+                    yellow: "bg-amber-400",
+                    red: "bg-rose-500",
+                    blue: "bg-sky-500"
+                  }[attendance.tone]
+                : "bg-slate-200";
 
               return (
                 <button
@@ -105,34 +114,47 @@ export function DashboardCalendar({
                   type="button"
                   disabled={isUpcoming}
                   onClick={() => setSelectedDate(day.key)}
-                  className={`group min-h-20 rounded-[18px] border p-3 text-left transition-all duration-200 sm:min-h-24 ${
+                  className={`group min-h-[4.75rem] rounded-[18px] border p-2 text-left transition-all duration-200 sm:min-h-24 sm:p-3 ${
                     isUpcoming 
-                      ? "cursor-not-allowed opacity-50 bg-slate-50/40 text-slate-400" 
+                      ? "cursor-not-allowed opacity-50 bg-slate-50/40 text-slate-400"
                       : "hover:-translate-y-1 hover:shadow-soft"
-                  } ${isToday ? "ring-2 ring-indigo-500 ring-offset-2" : ""} ${
+                  } ${isToday ? "ring-2 ring-indigo-500 ring-offset-1 sm:ring-offset-2" : ""} ${
                     day.inMonth
                       ? attendance
                         ? toneStyles[attendance.tone]
-                        : isUpcoming 
+                        : isUpcoming
                           ? "border-slate-200 border-dashed"
-                          : "border-slate-200 bg-slate-50/80 text-slate-900"
+                        : "border-slate-200 bg-slate-50/80 text-slate-900"
                       : "border-transparent bg-white/30 text-slate-300"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start justify-between gap-1.5">
                     <span className="text-xs font-semibold sm:text-sm">{formatDateLabel(day.key, "d")}</span>
                     {attendance ? (
-                      <span className="rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-medium shadow-sm">
+                      <span className="hidden rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-medium shadow-sm sm:inline-flex">
                         {formatPercent(attendance.attendancePercentage)}
                       </span>
                     ) : (
-                      <span className="rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
+                      <span className="hidden rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 sm:inline-flex">
                         No data
                       </span>
                     )}
                   </div>
 
-                  <div className="mt-4 space-y-0.5 text-[11px] sm:mt-6">
+                  <div className="mt-3 flex items-center justify-between sm:hidden">
+                    <span
+                      className={`h-2.5 w-2.5 rounded-full ${isUpcoming ? "bg-slate-200" : mobileTone}`}
+                    />
+                    {attendance ? (
+                      <span className="text-[10px] font-medium">
+                        {attendance.present}/{attendance.recordCount}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-slate-400">-</span>
+                    )}
+                  </div>
+
+                  <div className="mt-4 hidden space-y-0.5 text-[11px] sm:mt-6 sm:block">
                     {attendance ? (
                       <>
                         <p>{attendance.present} present</p>

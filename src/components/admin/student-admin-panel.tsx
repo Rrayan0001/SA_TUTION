@@ -163,7 +163,7 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
                     <Pencil className="h-4 w-4" />
                     Edit
                   </Button>
-                  <Button variant="danger" onClick={() => setDeleting(student)}>
+                  <Button variant="destructive" onClick={() => setDeleting(student)}>
                     <Trash2 className="h-4 w-4" />
                     Delete
                   </Button>
@@ -231,7 +231,7 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
             <Button variant="secondary" onClick={() => setDeleting(null)}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={deleteStudent} disabled={saving}>
+            <Button variant="destructive" onClick={deleteStudent} disabled={saving}>
               {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
               Confirm Delete
             </Button>
