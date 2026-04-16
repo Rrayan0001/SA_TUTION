@@ -62,7 +62,7 @@ export async function getDashboardMonth(month: string) {
   const start = toDateOnly(format(startOfMonth(monthDate), "yyyy-MM-dd"));
   const end = toDateOnly(format(endOfMonth(monthDate), "yyyy-MM-dd"));
 
-  const [studentCount, attendanceRecords] = await Promise.all([
+  const [studentCount, attendanceRecords, holidayRecords] = await Promise.all([
     prisma.student.count(),
     prisma.attendance.findMany({
       where: {
@@ -75,8 +75,23 @@ export async function getDashboardMonth(month: string) {
         date: true,
         status: true
       }
+    }),
+    prisma.holiday.findMany({
+      where: {
+        date: {
+          gte: start,
+          lte: end
+        }
+      },
+      select: {
+        date: true,
+        reason: true
+      }
     })
   ]);
+
+  const holidayDates = new Set(holidayRecords.map((record) => dateKey(record.date)));
+  const holidayReasonMap = new Map(holidayRecords.map((record) => [dateKey(record.date), record.reason]));
 
   const statsMap = new Map<
     string,
@@ -89,6 +104,10 @@ export async function getDashboardMonth(month: string) {
 
   for (const record of attendanceRecords) {
     const key = dateKey(record.date);
+    if (holidayDates.has(key)) {
+      continue;
+    }
+
     const current = statsMap.get(key) ?? { present: 0, absent: 0, recordCount: 0 };
     current.recordCount += 1;
     if (record.status === Status.present) {
@@ -99,10 +118,10 @@ export async function getDashboardMonth(month: string) {
     statsMap.set(key, current);
   }
 
-  const days = Array.from(statsMap.entries()).map(([key, value]) => {
+  const attendanceDays = Array.from(statsMap.entries()).map(([key, value]) => {
     const attendancePercentage = studentCount === 0 ? 0 : (value.present / studentCount) * 100;
 
-    let tone: "green" | "yellow" | "red" | "blue" = "blue";
+    let tone: "green" | "yellow" | "red" | "blue" | "holiday" = "blue";
     if (value.absent === 0 && value.recordCount >= studentCount && studentCount > 0) {
       tone = "green";
     } else if (attendancePercentage > 0 && attendancePercentage < 60) {
@@ -117,12 +136,25 @@ export async function getDashboardMonth(month: string) {
       absent: value.absent,
       recordCount: value.recordCount,
       attendancePercentage,
-      tone
+      tone,
+      isHoliday: false
     };
   });
 
-  const totalPresent = days.reduce((sum, day) => sum + day.present, 0);
-  const daysTracked = days.length;
+  const holidayDays = Array.from(holidayDates).map((key) => ({
+    date: key,
+    present: 0,
+    absent: 0,
+    recordCount: 0,
+    attendancePercentage: 0,
+    tone: "holiday" as const,
+    isHoliday: true,
+    holidayReason: holidayReasonMap.get(key) ?? null
+  }));
+
+  const days = [...attendanceDays, ...holidayDays].sort((a, b) => a.date.localeCompare(b.date));
+  const totalPresent = attendanceDays.reduce((sum, day) => sum + day.present, 0);
+  const daysTracked = attendanceDays.length;
   const averageAttendance =
     studentCount === 0 || daysTracked === 0
       ? 0
@@ -135,6 +167,7 @@ export async function getDashboardMonth(month: string) {
     summary: {
       totalStudents: studentCount,
       daysTracked,
+      holidays: holidayDays.length,
       totalPresent,
       averageAttendance
     }
@@ -144,7 +177,7 @@ export async function getDashboardMonth(month: string) {
 export async function getAttendanceDetail(date: string) {
   const normalizedDate = toDateOnly(date);
 
-  const [students, records] = await Promise.all([
+  const [students, records, holiday] = await Promise.all([
     prisma.student.findMany({
       orderBy: [{ className: "asc" }, { name: "asc" }],
       select: {
@@ -164,24 +197,31 @@ export async function getAttendanceDetail(date: string) {
           }
         }
       }
+    }),
+    prisma.holiday.findUnique({
+      where: { date: normalizedDate },
+      select: { id: true, reason: true }
     })
   ]);
 
   const recordMap = new Map(records.map((record) => [record.studentId, record.status]));
+  const isHoliday = Boolean(holiday);
   const presentCount = records.filter((record) => record.status === Status.present).length;
   const absentCount = records.filter((record) => record.status === Status.absent).length;
   const totalStudents = students.length;
-  const attendancePercentage = totalStudents === 0 ? 0 : (presentCount / totalStudents) * 100;
+  const attendancePercentage = isHoliday || totalStudents === 0 ? 0 : (presentCount / totalStudents) * 100;
 
   return {
     date,
+    isHoliday,
+    holidayReason: holiday?.reason ?? null,
     totalStudents,
-    presentCount,
-    absentCount,
+    presentCount: isHoliday ? 0 : presentCount,
+    absentCount: isHoliday ? 0 : absentCount,
     attendancePercentage,
     list: students.map((student) => ({
       ...student,
-      status: recordMap.get(student.id) ?? "not_marked"
+      status: isHoliday ? "holiday" : recordMap.get(student.id) ?? "not_marked"
     }))
   };
 }

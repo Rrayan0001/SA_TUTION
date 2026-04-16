@@ -25,7 +25,8 @@ export default async function MarkAttendancePage({ searchParams }: MarkAttendanc
   const initialStatuses = data.today.list.reduce<
     Record<string, "present" | "absent" | "not_marked">
   >((accumulator, item) => {
-    accumulator[item.id] = item.status as "present" | "absent" | "not_marked";
+    accumulator[item.id] =
+      item.status === "holiday" ? "not_marked" : (item.status as "present" | "absent" | "not_marked");
     return accumulator;
   }, {});
 
@@ -41,6 +42,8 @@ export default async function MarkAttendancePage({ searchParams }: MarkAttendanc
         students={data.students}
         selectedDate={selectedDate}
         maxDate={today}
+        initialIsHoliday={data.today.isHoliday}
+        initialHolidayReason={data.today.holidayReason ?? ""}
         initialStatuses={initialStatuses}
       />
     </div>

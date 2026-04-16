@@ -19,8 +19,11 @@ export async function POST(request: Request) {
 
   const normalizedDate = toDateOnly(parsed.data.date);
 
-  await prisma.$transaction(
-    parsed.data.entries.map((entry) =>
+  await prisma.$transaction([
+    prisma.holiday.deleteMany({
+      where: { date: normalizedDate }
+    }),
+    ...parsed.data.entries.map((entry) =>
       prisma.attendance.upsert({
         where: {
           studentId_date: {
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
         }
       })
     )
-  );
+  ]);
 
   revalidatePath("/");
   revalidatePath("/mark-attendance");

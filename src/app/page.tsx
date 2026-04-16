@@ -98,6 +98,11 @@ export default async function Home({ searchParams }: HomeProps) {
                 description: "Attendance exists."
               },
               {
+                color: "bg-violet-100 border-violet-200",
+                title: "Holiday",
+                description: "Excluded from totals."
+              },
+              {
                 color: "bg-slate-100 border-slate-200",
                 title: "Empty",
                 description: "No attendance data."

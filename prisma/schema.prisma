@@ -31,6 +31,15 @@ model Attendance {
   @@map("attendance")
 }
 
+model Holiday {
+  id        String   @id @default(uuid())
+  date      DateTime @unique @db.Date
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("holidays")
+}
+
 enum Status {
   present
   absent

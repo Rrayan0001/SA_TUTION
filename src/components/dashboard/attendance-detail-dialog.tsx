@@ -17,6 +17,8 @@ import { formatPercent } from "@/lib/utils";
 
 type AttendanceDetail = {
   date: string;
+  isHoliday: boolean;
+  holidayReason: string | null;
   totalStudents: number;
   presentCount: number;
   absentCount: number;
@@ -25,7 +27,7 @@ type AttendanceDetail = {
     id: string;
     name: string;
     className: string;
-    status: "present" | "absent" | "not_marked";
+    status: "present" | "absent" | "not_marked" | "holiday";
   }>;
 };
 
@@ -38,7 +40,8 @@ type AttendanceDetailDialogProps = {
 const statusVariant = {
   present: "success",
   absent: "danger",
-  not_marked: "default"
+  not_marked: "default",
+  holiday: "info"
 } as const;
 
 export function AttendanceDetailDialog({
@@ -71,7 +74,9 @@ export function AttendanceDetailDialog({
         <DialogHeader>
           <DialogTitle>{date ? formatDateLabel(date, "EEEE, dd MMMM yyyy") : "Attendance detail"}</DialogTitle>
           <DialogDescription>
-            Review the full attendance breakdown for the selected date.
+            {detail?.isHoliday
+              ? "This date is marked as a holiday and is excluded from attendance calculations."
+              : "Review the full attendance breakdown for the selected date."}
           </DialogDescription>
         </DialogHeader>
 
@@ -88,7 +93,7 @@ export function AttendanceDetailDialog({
                 { label: "Absent", value: detail.absentCount.toString() },
                 {
                   label: "Attendance",
-                  value: formatPercent(detail.attendancePercentage)
+                  value: detail.isHoliday ? "Excluded" : formatPercent(detail.attendancePercentage)
                 }
               ].map((item) => (
                 <div key={item.label} className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
@@ -97,6 +102,13 @@ export function AttendanceDetailDialog({
                 </div>
               ))}
             </div>
+
+            {detail.isHoliday && detail.holidayReason ? (
+              <div className="rounded-[24px] border border-violet-200 bg-violet-50/80 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-500">Holiday Reason</p>
+                <p className="mt-2 text-sm leading-6 text-violet-950">{detail.holidayReason}</p>
+              </div>
+            ) : null}
 
             <div className="rounded-[24px] border border-slate-200 bg-white">
               <Table>

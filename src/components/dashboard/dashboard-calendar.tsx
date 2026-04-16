@@ -24,7 +24,9 @@ type MonthDayStats = {
   absent: number;
   recordCount: number;
   attendancePercentage: number;
-  tone: "green" | "yellow" | "red" | "blue";
+  tone: "green" | "yellow" | "red" | "blue" | "holiday";
+  isHoliday?: boolean;
+  holidayReason?: string | null;
 };
 
 type DashboardCalendarProps = {
@@ -40,7 +42,8 @@ const toneStyles: Record<MonthDayStats["tone"], string> = {
   green: "border-emerald-200 bg-emerald-50/85 text-emerald-950",
   yellow: "border-amber-200 bg-amber-50/85 text-amber-950",
   red: "border-rose-200 bg-rose-50/85 text-rose-950",
-  blue: "border-sky-200 bg-sky-50/85 text-sky-950"
+  blue: "border-sky-200 bg-sky-50/85 text-sky-950",
+  holiday: "border-violet-200 bg-violet-50/85 text-violet-950"
 };
 
 export function DashboardCalendar({
@@ -104,7 +107,8 @@ export function DashboardCalendar({
                     green: "bg-emerald-500",
                     yellow: "bg-amber-400",
                     red: "bg-rose-500",
-                    blue: "bg-sky-500"
+                    blue: "bg-sky-500",
+                    holiday: "bg-violet-500"
                   }[attendance.tone]
                 : "bg-slate-200";
 
@@ -132,7 +136,7 @@ export function DashboardCalendar({
                     <span className="text-xs font-semibold sm:text-sm">{formatDateLabel(day.key, "d")}</span>
                     {attendance ? (
                       <span className="hidden rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-medium shadow-sm sm:inline-flex">
-                        {formatPercent(attendance.attendancePercentage)}
+                        {attendance.isHoliday ? "Holiday" : formatPercent(attendance.attendancePercentage)}
                       </span>
                     ) : (
                       <span className="hidden rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 sm:inline-flex">
@@ -147,7 +151,7 @@ export function DashboardCalendar({
                     />
                     {attendance ? (
                       <span className="text-[10px] font-medium">
-                        {attendance.present}/{attendance.recordCount}
+                        {attendance.isHoliday ? "Off" : `${attendance.present}/${attendance.recordCount}`}
                       </span>
                     ) : (
                       <span className="text-[10px] text-slate-400">-</span>
@@ -156,10 +160,14 @@ export function DashboardCalendar({
 
                   <div className="mt-4 hidden space-y-0.5 text-[11px] sm:mt-6 sm:block">
                     {attendance ? (
-                      <>
-                        <p>{attendance.present} present</p>
-                        <p>{attendance.absent} absent</p>
-                      </>
+                      attendance.isHoliday ? (
+                        <p>Holiday</p>
+                      ) : (
+                        <>
+                          <p>{attendance.present} present</p>
+                          <p>{attendance.absent} absent</p>
+                        </>
+                      )
                     ) : (
                       <p className="text-slate-400">Not marked</p>
                     )}

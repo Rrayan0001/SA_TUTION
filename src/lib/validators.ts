@@ -14,3 +14,8 @@ export const attendancePayloadSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   entries: z.array(attendanceEntrySchema).min(1, "Select at least one student")
 });
+
+export const holidayPayloadSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  reason: z.string().trim().max(240, "Reason must be 240 characters or less").optional()
+});
