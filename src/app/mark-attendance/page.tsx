@@ -5,9 +5,23 @@ import { todayKey } from "@/lib/date";
 
 export const dynamic = "force-dynamic";
 
-export default async function MarkAttendancePage() {
-  const data = await getMarkAttendanceData();
+type MarkAttendancePageProps = {
+  searchParams: Promise<{ date?: string }>;
+};
+
+function getSafeAttendanceDate(date: string | undefined, maxDate: string) {
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return maxDate;
+  }
+
+  return date > maxDate ? maxDate : date;
+}
+
+export default async function MarkAttendancePage({ searchParams }: MarkAttendancePageProps) {
   const today = todayKey();
+  const params = await searchParams;
+  const selectedDate = getSafeAttendanceDate(params.date, today);
+  const data = await getMarkAttendanceData(selectedDate);
   const initialStatuses = data.today.list.reduce<
     Record<string, "present" | "absent" | "not_marked">
   >((accumulator, item) => {
@@ -19,13 +33,14 @@ export default async function MarkAttendancePage() {
     <div className="space-y-8">
       <PageHeader
         eyebrow="Daily Workflow"
-        title="Mark attendance in one smooth pass."
-        description="Use fast present and absent toggles, then save the full register for today without duplicate entries."
+        title="Mark attendance for any previous class day."
+        description="Choose today or an earlier date, use fast present and absent toggles, then save without duplicate entries."
       />
 
       <AttendanceMarker
         students={data.students}
-        today={today}
+        selectedDate={selectedDate}
+        maxDate={today}
         initialStatuses={initialStatuses}
       />
     </div>

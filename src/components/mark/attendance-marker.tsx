@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { formatDateLabel } from "@/lib/date";
 
 type Student = {
@@ -18,16 +20,28 @@ type Student = {
 
 type AttendanceMarkerProps = {
   students: Student[];
-  today: string;
+  selectedDate: string;
+  maxDate: string;
   initialStatuses: Record<string, "present" | "absent" | "not_marked">;
 };
 
-export function AttendanceMarker({ students, today, initialStatuses }: AttendanceMarkerProps) {
+export function AttendanceMarker({
+  students,
+  selectedDate,
+  maxDate,
+  initialStatuses
+}: AttendanceMarkerProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [dateValue, setDateValue] = useState(selectedDate);
   const [statuses, setStatuses] = useState<Record<string, "present" | "absent" | "not_marked">>(
     initialStatuses
   );
+
+  useEffect(() => {
+    setDateValue(selectedDate);
+    setStatuses(initialStatuses);
+  }, [initialStatuses, selectedDate]);
 
   const summary = useMemo(() => {
     const values = Object.values(statuses);
@@ -43,6 +57,18 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
       ...current,
       [studentId]: current[studentId] === status ? "not_marked" : status
     }));
+  };
+
+  const handleDateChange = (value: string) => {
+    if (!value) return;
+
+    if (value > maxDate) {
+      toast.error("Future attendance cannot be marked.");
+      return;
+    }
+
+    setDateValue(value);
+    router.push(`/mark-attendance?date=${value}`);
   };
 
   const handleSubmit = async () => {
@@ -67,7 +93,7 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          date: today,
+          date: selectedDate,
           entries
         })
       });
@@ -78,7 +104,7 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
       }
 
       toast.success("Attendance saved successfully.");
-      router.push(`/?month=${today.slice(0, 7)}`);
+      router.push(`/?month=${selectedDate.slice(0, 7)}`);
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to save attendance.");
@@ -101,10 +127,21 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
       <Card>
         <CardHeader className="flex flex-col gap-5 border-b border-slate-100 pb-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <CardTitle className="text-2xl">Today&apos;s register</CardTitle>
-            <p className="mt-2 text-sm text-slate-500">{formatDateLabel(today, "EEEE, dd MMMM yyyy")}</p>
+            <CardTitle className="text-2xl">Attendance register</CardTitle>
+            <p className="mt-2 text-sm text-slate-500">{formatDateLabel(selectedDate, "EEEE, dd MMMM yyyy")}</p>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid gap-4 md:grid-cols-[minmax(190px,220px)_auto] md:items-end">
+            <div className="space-y-2">
+              <Label htmlFor="attendance-date">Attendance Date</Label>
+              <Input
+                id="attendance-date"
+                type="date"
+                value={dateValue}
+                max={maxDate}
+                onChange={(event) => handleDateChange(event.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
             {[
               { label: "Present", value: summary.present, tone: "text-slate-900" },
               { label: "Absent", value: summary.absent, tone: "text-slate-700" },
@@ -115,6 +152,7 @@ export function AttendanceMarker({ students, today, initialStatuses }: Attendanc
                 <p className={`mt-2 text-2xl font-semibold ${item.tone}`}>{item.value}</p>
               </div>
             ))}
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 p-4 sm:p-6">

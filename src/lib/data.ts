@@ -1,7 +1,7 @@
 import { Status } from "@prisma/client";
 import { endOfMonth, format, parseISO, startOfMonth } from "date-fns";
 
-import { dateKey, toDateOnly, todayKey } from "@/lib/date";
+import { dateKey, toDateOnly } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
 
 type StudentSummaryFilters = {
@@ -43,12 +43,12 @@ export async function getAdminStudents() {
   });
 }
 
-export async function getMarkAttendanceData() {
+export async function getMarkAttendanceData(date: string) {
   const [students, today] = await Promise.all([
     prisma.student.findMany({
       orderBy: [{ className: "asc" }, { name: "asc" }]
     }),
-    getAttendanceDetail(todayKey())
+    getAttendanceDetail(date)
   ]);
 
   return {

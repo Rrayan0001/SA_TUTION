@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { attendancePayloadSchema } from "@/lib/validators";
-import { toDateOnly } from "@/lib/date";
+import { toDateOnly, todayKey } from "@/lib/date";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -11,6 +11,10 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid payload." }, { status: 400 });
+  }
+
+  if (parsed.data.date > todayKey()) {
+    return NextResponse.json({ error: "Future attendance cannot be marked." }, { status: 400 });
   }
 
   const normalizedDate = toDateOnly(parsed.data.date);
