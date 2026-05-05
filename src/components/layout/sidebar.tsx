@@ -32,22 +32,22 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <ShadcnSidebar collapsible="icon" className="border-r border-slate-200 bg-white">
-      <SidebarHeader className="h-16 justify-center border-b border-slate-100 bg-white group-data-[collapsible=icon]:p-0">
+    <ShadcnSidebar collapsible="icon" className="border-r border-[#e0e0e0] bg-black text-white">
+      <SidebarHeader className="h-16 justify-center border-b border-[#1a1a1a] bg-black group-data-[collapsible=icon]:p-0">
          <div className="flex items-center gap-3 overflow-hidden px-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
-          <div className="flex shrink-0 rounded-xl bg-slate-950 p-2 text-white shadow-sm group-data-[collapsible=icon]:p-1.5 items-center justify-center">
+          <div className="flex shrink-0 items-center justify-center rounded-full bg-[#0066cc] p-2 text-white group-data-[collapsible=icon]:p-1.5">
             <Orbit className="h-5 w-5 group-data-[collapsible=icon]:h-4 group-data-[collapsible=icon]:w-4" />
           </div>
           <div className="transition-all duration-300 group-data-[collapsible=icon]:hidden">
-            <p className="whitespace-nowrap text-[10px] font-extrabold uppercase tracking-[0.4em] text-slate-500">Lumina</p>
-            <p className="whitespace-nowrap text-sm font-bold tracking-tighter text-slate-950">Intelligence</p>
+            <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.4em] text-white/60">RayanTution</p>
+            <p className="whitespace-nowrap text-sm font-semibold tracking-tight text-white">Intelligence</p>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="bg-white py-4 group-data-[collapsible=icon]:px-0 px-2">
+      <SidebarContent className="bg-black py-4 group-data-[collapsible=icon]:px-0 px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-slate-400 group-data-[collapsible=icon]:sr-only">Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-white/45 group-data-[collapsible=icon]:sr-only">Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {links.map((link) => {
@@ -61,8 +61,8 @@ export function AppSidebar() {
                       isActive={isActive}
                       className={
                         isActive 
-                          ? "bg-slate-950 text-white shadow-soft hover:bg-slate-900 hover:text-white !h-12 group-data-[collapsible=icon]:!h-8" 
-                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-950 !h-12 group-data-[collapsible=icon]:!h-8"
+                            ? "bg-[#0066cc] text-white hover:bg-[#0071e3] !h-12 group-data-[collapsible=icon]:!h-8" 
+                            : "text-white/70 hover:bg-white/10 hover:text-white !h-12 group-data-[collapsible=icon]:!h-8"
                       }
                     >
                       <a href={link.href}>

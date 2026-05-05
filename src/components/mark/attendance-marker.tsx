@@ -179,10 +179,10 @@ export function AttendanceMarker({
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-col gap-5 border-b border-slate-100 pb-6 md:flex-row md:items-end md:justify-between">
+        <CardHeader className="flex flex-col gap-5 border-b border-[#e0e0e0] pb-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <CardTitle className="text-2xl">Attendance register</CardTitle>
-            <p className="mt-2 text-sm text-slate-500">{formatDateLabel(selectedDate, "EEEE, dd MMMM yyyy")}</p>
+            <CardTitle className="text-2xl text-[#1d1d1f]">Attendance register</CardTitle>
+            <p className="mt-2 text-sm text-[#7a7a7a]">{formatDateLabel(selectedDate, "EEEE, dd MMMM yyyy")}</p>
           </div>
           <div className="grid gap-4 md:grid-cols-[minmax(190px,220px)_auto] md:items-end">
             <div className="space-y-2">
@@ -197,12 +197,12 @@ export function AttendanceMarker({
             </div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: "Present", value: isHoliday ? 0 : summary.present, tone: "text-slate-900" },
-                { label: "Absent", value: isHoliday ? 0 : summary.absent, tone: "text-slate-700" },
-                { label: isHoliday ? "Holiday" : "Pending", value: isHoliday ? "Off" : summary.pending, tone: "text-slate-500" }
+                { label: "Present", value: isHoliday ? 0 : summary.present, tone: "text-[#1d1d1f]" },
+                { label: "Absent", value: isHoliday ? 0 : summary.absent, tone: "text-[#333333]" },
+                { label: isHoliday ? "Holiday" : "Pending", value: isHoliday ? "Off" : summary.pending, tone: "text-[#7a7a7a]" }
               ].map((item) => (
-                <div key={item.label} className="rounded-[20px] bg-slate-50 px-4 py-3 text-center">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-400">{item.label}</p>
+                <div key={item.label} className="rounded-full border border-[#e0e0e0] bg-[#fafafc] px-4 py-3 text-center">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[#7a7a7a]">{item.label}</p>
                   <p className={`mt-2 text-2xl font-semibold ${item.tone}`}>{item.value}</p>
                 </div>
               ))}
@@ -210,11 +210,11 @@ export function AttendanceMarker({
           </div>
         </CardHeader>
         <CardContent className="space-y-4 p-4 sm:p-6">
-          <div className="space-y-4 rounded-[24px] border border-slate-200 bg-white p-4">
+          <div className="space-y-4 rounded-none border border-[#e0e0e0] bg-white p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
-              <p className="font-semibold text-slate-950">Holiday option</p>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="font-semibold text-[#1d1d1f]">Holiday option</p>
+              <p className="mt-1 text-sm text-[#7a7a7a]">
                 Add a reason and mark this date as a holiday so it is excluded from attendance calculations.
               </p>
               </div>
@@ -255,22 +255,22 @@ export function AttendanceMarker({
                 maxLength={240}
                 onChange={(event) => setHolidayReason(event.target.value)}
                 placeholder="Example: Public holiday, festival, teacher unavailable..."
-                className="min-h-24 w-full resize-none rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-900 shadow-sm transition duration-200 placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/10"
+                className="min-h-24 w-full resize-none rounded-none border border-[#e0e0e0] bg-white px-4 py-3 text-[15px] text-[#1d1d1f] transition duration-200 placeholder:text-[#7a7a7a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]/20"
               />
-              <p className="text-xs text-slate-400">{holidayReason.length}/240 characters</p>
+              <p className="text-xs text-[#7a7a7a]">{holidayReason.length}/240 characters</p>
             </div>
           </div>
 
           {isHoliday ? (
-            <div className="rounded-[28px] border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-              <p className="text-lg font-semibold text-slate-950">This day is marked as a holiday.</p>
-              <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
+            <div className="rounded-none border border-dashed border-[#e0e0e0] bg-[#fafafc] p-8 text-center">
+              <p className="text-lg font-semibold text-[#1d1d1f]">This day is marked as a holiday.</p>
+              <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#7a7a7a]">
                 No student attendance is required, and this date will not be considered in dashboard averages or student reports.
               </p>
               {holidayReason.trim() ? (
-                <div className="mx-auto mt-5 max-w-xl rounded-2xl border border-slate-200 bg-white p-4 text-left">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Reason</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-700">{holidayReason.trim()}</p>
+                <div className="mx-auto mt-5 max-w-xl rounded-none border border-[#e0e0e0] bg-white p-4 text-left">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7a7a7a]">Reason</p>
+                  <p className="mt-2 text-sm leading-6 text-[#333333]">{holidayReason.trim()}</p>
                 </div>
               ) : null}
             </div>
@@ -281,11 +281,11 @@ export function AttendanceMarker({
               return (
                 <div
                   key={student.id}
-                  className="flex flex-col gap-4 rounded-[24px] border border-slate-200 bg-white/70 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-4 rounded-none border border-[#e0e0e0] bg-white p-4 transition-colors duration-200 hover:bg-[#fafafc] sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
-                    <p className="text-lg font-semibold text-slate-900">{student.name}</p>
-                    <p className="text-sm text-slate-500">{student.className}</p>
+                    <p className="text-lg font-semibold text-[#1d1d1f]">{student.name}</p>
+                    <p className="text-sm text-[#7a7a7a]">{student.className}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button

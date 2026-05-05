@@ -62,33 +62,33 @@ export default async function StudentDetailPage({ params }: StudentDetailProps) 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Monthly summary</CardTitle>
+            <CardTitle className="text-[#1d1d1f]">Monthly summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {student.monthlySummary.length ? (
               student.monthlySummary.map((month) => (
-                <div key={month.label} className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <div key={month.label} className="rounded-none border border-[#e0e0e0] bg-[#fafafc] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="font-semibold text-slate-900">{month.label}</p>
-                      <p className="text-sm text-slate-500">{month.totalClasses} recorded classes</p>
+                      <p className="font-semibold text-[#1d1d1f]">{month.label}</p>
+                      <p className="text-sm text-[#7a7a7a]">{month.totalClasses} recorded classes</p>
                     </div>
                     <Badge variant="info">{formatPercent(month.attendancePercentage)}</Badge>
                   </div>
-                  <div className="mt-4 h-2 rounded-full bg-slate-200">
+                  <div className="mt-4 h-2 rounded-full bg-[#e9e9eb]">
                     <div
-                      className="h-2 rounded-full bg-slate-900"
+                      className="h-2 rounded-full bg-[#1d1d1f]"
                       style={{ width: `${Math.max(month.attendancePercentage, 6)}%` }}
                     />
                   </div>
-                  <div className="mt-3 flex items-center justify-between text-sm text-slate-500">
+                  <div className="mt-3 flex items-center justify-between text-sm text-[#7a7a7a]">
                     <span>{month.presentDays} present</span>
                     <span>{month.absentDays} absent</span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="rounded-[24px] border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+              <div className="rounded-none border border-dashed border-[#e0e0e0] p-8 text-center text-sm text-[#7a7a7a]">
                 No attendance has been recorded for this student yet.
               </div>
             )}
@@ -97,7 +97,7 @@ export default async function StudentDetailPage({ params }: StudentDetailProps) 
 
         <Card>
           <CardHeader>
-            <CardTitle>Date-wise history</CardTitle>
+            <CardTitle className="text-[#1d1d1f]">Date-wise history</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -111,7 +111,7 @@ export default async function StudentDetailPage({ params }: StudentDetailProps) 
                 {student.history.length ? (
                   student.history.map((item) => (
                     <TableRow key={item.id}>
-                      <TableCell className="font-medium text-slate-900">
+                      <TableCell className="font-medium text-[#1d1d1f]">
                         {formatDateLabel(item.date, "dd MMM yyyy")}
                       </TableCell>
                       <TableCell>

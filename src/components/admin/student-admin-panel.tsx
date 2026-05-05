@@ -131,15 +131,15 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
     <>
       <div className="space-y-6">
         <Card>
-          <CardHeader className="flex flex-col gap-5 border-b border-slate-100 pb-6 md:flex-row md:items-center md:justify-between">
+          <CardHeader className="flex flex-col gap-5 border-b border-[#e0e0e0] pb-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <CardTitle className="text-2xl">Student management</CardTitle>
-              <p className="mt-2 text-sm text-slate-500">
+              <CardTitle className="text-2xl text-[#1d1d1f]">Student management</CardTitle>
+              <p className="mt-2 text-sm text-[#7a7a7a]">
                 Maintain your student list with clean, validated admin controls.
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className="rounded-[20px] bg-slate-50 px-4 py-3 text-sm text-slate-500">
+              <div className="rounded-full border border-[#e0e0e0] bg-[#fafafc] px-4 py-3 text-sm text-[#7a7a7a]">
                 {totalStudents} students
               </div>
               <Button onClick={openCreate}>
@@ -152,11 +152,11 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
             {students.map((student) => (
               <div
                 key={student.id}
-                className="flex flex-col gap-4 rounded-[24px] border border-slate-200 bg-white/70 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 rounded-none border border-[#e0e0e0] bg-white p-4 transition-colors duration-200 hover:bg-[#fafafc] sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="text-lg font-semibold text-slate-900">{student.name}</p>
-                  <p className="text-sm text-slate-500">{student.className}</p>
+                  <p className="text-lg font-semibold text-[#1d1d1f]">{student.name}</p>
+                  <p className="text-sm text-[#7a7a7a]">{student.className}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Button variant="secondary" onClick={() => openEdit(student)}>
@@ -224,7 +224,7 @@ export function StudentAdminPanel({ students }: StudentAdminPanelProps) {
               This removes the student and all linked attendance entries. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="rounded-none border border-[#e0e0e0] bg-[#fafafc] p-4 text-sm text-[#7a7a7a]">
             {deleting?.name} will be removed from the dashboard, reports, and attendance history.
           </div>
           <DialogFooter>

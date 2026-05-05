@@ -1,19 +1,13 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { AppShell } from "@/components/layout/app-shell";
 import "@/app/globals.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope"
-});
-
 export const metadata: Metadata = {
-  title: "Lumina | Educational Intelligence",
-  description: "A premium, monochrome intelligence dashboard for modern tuition management."
+  title: "RayanTution | Educational Intelligence",
+  description: "RayanTution — a premium intelligence dashboard for modern tuition management."
 };
 
 export default function RootLayout({
@@ -23,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={manrope.className}>
+      <body>
         <AppShell>{children}</AppShell>
         <Toaster
           position="top-right"

@@ -1,10 +1,23 @@
 import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
 const config = {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "SF Pro Text",
+          "SF Pro Display",
+          "-apple-system",
+          "system-ui",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial"
+        ]
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -63,21 +76,33 @@ const config = {
         }
       },
       borderRadius: {
-        xl: "1rem",
-        "2xl": "1.5rem",
-        "3xl": "2rem"
+        none: "0px",
+        xs: "5px",
+        sm: "8px",
+        md: "11px",
+        lg: "18px",
+        pill: "9999px",
+        full: "9999px"
       },
       boxShadow: {
-        glow: "0 20px 60px -25px rgba(59, 130, 246, 0.28)",
-        soft: "0 15px 45px -22px rgba(15, 23, 42, 0.18)"
+        "product-shadow": "3px 5px 30px rgba(0,0,0,0.22)",
+        soft: "0 4px 14px 0 rgba(0, 0, 0, 0.05)",
+        floating: "0 10px 40px -10px rgba(0,0,0,0.08)",
+        none: "none"
       },
-      backgroundImage: {
-        "hero-grid":
-          "radial-gradient(circle at top left, rgba(59,130,246,0.12), transparent 26%), radial-gradient(circle at bottom right, rgba(15,23,42,0.08), transparent 30%)"
+      backgroundImage: {},
+      animation: {
+        "fade-in-up": "fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards"
+      },
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        }
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  plugins: [tailwindAnimate]
 } satisfies Config;
 
 export default config;

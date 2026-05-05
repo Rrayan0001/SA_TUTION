@@ -39,11 +39,11 @@ type DashboardCalendarProps = {
 };
 
 const toneStyles: Record<MonthDayStats["tone"], string> = {
-  green: "border-emerald-200 bg-emerald-50/85 text-emerald-950",
-  yellow: "border-amber-200 bg-amber-50/85 text-amber-950",
-  red: "border-rose-200 bg-rose-50/85 text-rose-950",
-  blue: "border-sky-200 bg-sky-50/85 text-sky-950",
-  holiday: "border-violet-200 bg-violet-50/85 text-violet-950"
+  green: "border-[#c7e7cf] bg-[#edf7ef] text-[#1e7e34]",
+  yellow: "border-[#f0e1a2] bg-[#fff7db] text-[#8a6d00]",
+  red: "border-[#f2c1c1] bg-[#fff1f0] text-[#d0021b]",
+  blue: "border-[#d7e9fb] bg-[#f0f7ff] text-[#0066cc]",
+  holiday: "border-[#e4d7fb] bg-[#f7f2ff] text-[#6f42c1]"
 };
 
 export function DashboardCalendar({
@@ -118,28 +118,28 @@ export function DashboardCalendar({
                   type="button"
                   disabled={isUpcoming}
                   onClick={() => setSelectedDate(day.key)}
-                  className={`group min-h-[4.75rem] rounded-[18px] border p-2 text-left transition-all duration-200 sm:min-h-24 sm:p-3 ${
+                  className={`group min-h-[4.75rem] rounded-none border border-[#e0e0e0] p-2 text-left transition-colors duration-200 sm:min-h-24 sm:p-3 ${
                     isUpcoming 
-                      ? "cursor-not-allowed opacity-50 bg-slate-50/40 text-slate-400"
-                      : "hover:-translate-y-1 hover:shadow-soft"
-                  } ${isToday ? "ring-2 ring-slate-900 ring-offset-1 sm:ring-offset-2" : ""} ${
+                      ? "cursor-not-allowed opacity-40 bg-[#f5f5f7] text-[#c7c7cc]"
+                      : "hover:bg-[#fafafc] active:scale-[0.99]"
+                  } ${isToday ? "ring-1 ring-[#0066cc] ring-offset-1" : ""} ${
                     day.inMonth
                       ? attendance
-                        ? toneStyles[attendance.tone]
+                        ? toneStyles[attendance.tone] + " border-current/25 hover:border-current/40"
                         : isUpcoming
-                          ? "border-slate-200 border-dashed"
-                        : "border-slate-200 bg-slate-50/80 text-slate-900"
-                      : "border-transparent bg-white/30 text-slate-300"
+                          ? "border-dashed border-[#e0e0e0] bg-white"
+                        : "border-[#e0e0e0] bg-white text-[#1d1d1f]"
+                      : "border-transparent bg-white text-[#c7c7cc]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1.5">
-                    <span className="text-xs font-semibold sm:text-sm">{formatDateLabel(day.key, "d")}</span>
+                    <span className="text-xs font-medium sm:text-sm">{formatDateLabel(day.key, "d")}</span>
                     {attendance ? (
-                      <span className="hidden rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-medium shadow-sm sm:inline-flex">
+                      <span className="hidden rounded-full bg-white px-2 py-0.5 text-[10px] font-medium border border-[#e0e0e0] sm:inline-flex">
                         {attendance.isHoliday ? "Holiday" : formatPercent(attendance.attendancePercentage)}
                       </span>
                     ) : (
-                      <span className="hidden rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 sm:inline-flex">
+                      <span className="hidden rounded-full bg-[#f5f5f7] px-2 py-0.5 text-[10px] font-medium text-[#7a7a7a] sm:inline-flex">
                         No data
                       </span>
                     )}
@@ -147,29 +147,29 @@ export function DashboardCalendar({
 
                   <div className="mt-3 flex items-center justify-between sm:hidden">
                     <span
-                      className={`h-2.5 w-2.5 rounded-full ${isUpcoming ? "bg-slate-200" : mobileTone}`}
+                      className={`h-2.5 w-2.5 rounded-full ${isUpcoming ? "bg-[#e0e0e0]" : mobileTone}`}
                     />
                     {attendance ? (
                       <span className="text-[10px] font-medium">
                         {attendance.isHoliday ? "Off" : `${attendance.present}/${attendance.recordCount}`}
                       </span>
                     ) : (
-                      <span className="text-[10px] text-slate-400">-</span>
+                      <span className="text-[10px] text-[#7a7a7a]">-</span>
                     )}
                   </div>
 
                   <div className="mt-4 hidden space-y-0.5 text-[11px] sm:mt-6 sm:block">
                     {attendance ? (
                       attendance.isHoliday ? (
-                        <p>Holiday</p>
+                        <p className="font-medium">Holiday</p>
                       ) : (
                         <>
-                          <p>{attendance.present} present</p>
-                          <p>{attendance.absent} absent</p>
+                          <p className="font-medium">{attendance.present} present</p>
+                          <p className="text-[#7a7a7a]">{attendance.absent} absent</p>
                         </>
                       )
                     ) : (
-                      <p className="text-slate-400">Not marked</p>
+                      <p className="font-medium text-[#7a7a7a]">Not marked</p>
                     )}
                   </div>
                 </button>

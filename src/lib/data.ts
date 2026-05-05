@@ -9,6 +9,27 @@ type StudentSummaryFilters = {
   className?: string;
 };
 
+function isDatabaseConnectionError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes("server has closed the connection") || message.includes("connection");
+}
+
+async function withDatabaseFallback<T>(operation: () => Promise<T>, fallback: T) {
+  try {
+    return await operation();
+  } catch (error) {
+    if (isDatabaseConnectionError(error)) {
+      return fallback;
+    }
+
+    throw error;
+  }
+}
+
 function buildStudentWhere(filters?: StudentSummaryFilters) {
   return {
     ...(filters?.query
@@ -28,26 +49,38 @@ function buildStudentWhere(filters?: StudentSummaryFilters) {
 }
 
 export async function getClassOptions() {
-  const classes = await prisma.student.findMany({
-    distinct: ["className"],
-    select: { className: true },
-    orderBy: { className: "asc" }
-  });
+  const classes = await withDatabaseFallback(
+    () =>
+      prisma.student.findMany({
+        distinct: ["className"],
+        select: { className: true },
+        orderBy: { className: "asc" }
+      }),
+    []
+  );
 
   return classes.map((item) => item.className);
 }
 
 export async function getAdminStudents() {
-  return prisma.student.findMany({
-    orderBy: [{ className: "asc" }, { name: "asc" }]
-  });
+  return withDatabaseFallback(
+    () =>
+      prisma.student.findMany({
+        orderBy: [{ className: "asc" }, { name: "asc" }]
+      }),
+    []
+  );
 }
 
 export async function getMarkAttendanceData(date: string) {
   const [students, today] = await Promise.all([
-    prisma.student.findMany({
-      orderBy: [{ className: "asc" }, { name: "asc" }]
-    }),
+    withDatabaseFallback(
+      () =>
+        prisma.student.findMany({
+          orderBy: [{ className: "asc" }, { name: "asc" }]
+        }),
+      []
+    ),
     getAttendanceDetail(date)
   ]);
 
@@ -63,31 +96,39 @@ export async function getDashboardMonth(month: string) {
   const end = toDateOnly(format(endOfMonth(monthDate), "yyyy-MM-dd"));
 
   const [studentCount, attendanceRecords, holidayRecords] = await Promise.all([
-    prisma.student.count(),
-    prisma.attendance.findMany({
-      where: {
-        date: {
-          gte: start,
-          lte: end
-        }
-      },
-      select: {
-        date: true,
-        status: true
-      }
-    }),
-    prisma.holiday.findMany({
-      where: {
-        date: {
-          gte: start,
-          lte: end
-        }
-      },
-      select: {
-        date: true,
-        reason: true
-      }
-    })
+    withDatabaseFallback(() => prisma.student.count(), 0),
+    withDatabaseFallback(
+      () =>
+        prisma.attendance.findMany({
+          where: {
+            date: {
+              gte: start,
+              lte: end
+            }
+          },
+          select: {
+            date: true,
+            status: true
+          }
+        }),
+      []
+    ),
+    withDatabaseFallback(
+      () =>
+        prisma.holiday.findMany({
+          where: {
+            date: {
+              gte: start,
+              lte: end
+            }
+          },
+          select: {
+            date: true,
+            reason: true
+          }
+        }),
+      []
+    )
   ]);
 
   const holidayDates = new Set(holidayRecords.map((record) => dateKey(record.date)));
@@ -178,30 +219,42 @@ export async function getAttendanceDetail(date: string) {
   const normalizedDate = toDateOnly(date);
 
   const [students, records, holiday] = await Promise.all([
-    prisma.student.findMany({
-      orderBy: [{ className: "asc" }, { name: "asc" }],
-      select: {
-        id: true,
-        name: true,
-        className: true
-      }
-    }),
-    prisma.attendance.findMany({
-      where: { date: normalizedDate },
-      include: {
-        student: {
+    withDatabaseFallback(
+      () =>
+        prisma.student.findMany({
+          orderBy: [{ className: "asc" }, { name: "asc" }],
           select: {
             id: true,
             name: true,
             className: true
           }
-        }
-      }
-    }),
-    prisma.holiday.findUnique({
-      where: { date: normalizedDate },
-      select: { id: true, reason: true }
-    })
+        }),
+      []
+    ),
+    withDatabaseFallback(
+      () =>
+        prisma.attendance.findMany({
+          where: { date: normalizedDate },
+          include: {
+            student: {
+              select: {
+                id: true,
+                name: true,
+                className: true
+              }
+            }
+          }
+        }),
+      []
+    ),
+    withDatabaseFallback(
+      () =>
+        prisma.holiday.findUnique({
+          where: { date: normalizedDate },
+          select: { id: true, reason: true }
+        }),
+      null
+    )
   ]);
 
   const recordMap = new Map(records.map((record) => [record.studentId, record.status]));
@@ -228,19 +281,23 @@ export async function getAttendanceDetail(date: string) {
 
 export async function getStudentsOverview(filters?: StudentSummaryFilters) {
   const [students, classes] = await Promise.all([
-    prisma.student.findMany({
-      where: buildStudentWhere(filters),
-      include: {
-        attendance: {
-          orderBy: { date: "desc" },
-          select: {
-            date: true,
-            status: true
-          }
-        }
-      },
-      orderBy: [{ className: "asc" }, { name: "asc" }]
-    }),
+    withDatabaseFallback(
+      () =>
+        prisma.student.findMany({
+          where: buildStudentWhere(filters),
+          include: {
+            attendance: {
+              orderBy: { date: "desc" },
+              select: {
+                date: true,
+                status: true
+              }
+            }
+          },
+          orderBy: [{ className: "asc" }, { name: "asc" }]
+        }),
+      []
+    ),
     getClassOptions()
   ]);
 
@@ -266,14 +323,18 @@ export async function getStudentsOverview(filters?: StudentSummaryFilters) {
 }
 
 export async function getStudentDetail(studentId: string) {
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    include: {
-      attendance: {
-        orderBy: { date: "desc" }
-      }
-    }
-  });
+  const student = await withDatabaseFallback(
+    () =>
+      prisma.student.findUnique({
+        where: { id: studentId },
+        include: {
+          attendance: {
+            orderBy: { date: "desc" }
+          }
+        }
+      }),
+    null
+  );
 
   if (!student) {
     return null;

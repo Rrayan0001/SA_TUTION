@@ -7,15 +7,13 @@ import { MobileNav, MobileHeader } from "@/components/layout/mobile-nav";
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-[#fbfbfa] text-slate-900">
-        <div className="pointer-events-none fixed inset-0 bg-hero-grid" />
-        
+      <div className="flex min-h-screen w-full bg-[#ffffff] text-[#1d1d1f]">
         <AppSidebar />
-        
+
         <SidebarInset className="flex flex-1 flex-col overflow-hidden bg-transparent w-full">
           <MobileHeader />
-          <div className="px-4 py-3 hidden md:block">
-            <SidebarTrigger className="h-8 w-8 text-slate-500 hover:text-slate-900" />
+          <div className="hidden px-4 py-3 md:block">
+            <SidebarTrigger className="h-8 w-8 text-[#7a7a7a] hover:text-[#1d1d1f]" />
           </div>
           <div className="relative mx-auto w-full max-w-7xl px-4 pb-40 sm:px-6 lg:px-8 md:pb-8">
             {children}

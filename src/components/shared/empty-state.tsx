@@ -11,12 +11,12 @@ export function EmptyState({ title, description }: EmptyStateProps) {
   return (
     <Card className="border-dashed">
       <CardHeader className="items-center text-center">
-        <div className="rounded-full bg-slate-100 p-4 text-slate-500">
+        <div className="rounded-full border border-[#e0e0e0] bg-[#fafafc] p-4 text-[#7a7a7a]">
           <Inbox className="h-6 w-6" />
         </div>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-[#1d1d1f]">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="pt-0 text-center text-sm text-slate-500">{description}</CardContent>
+      <CardContent className="pt-0 text-center text-sm text-[#7a7a7a]">{description}</CardContent>
     </Card>
   );
 }

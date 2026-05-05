@@ -26,12 +26,12 @@ export function StudentCard({
 }: StudentCardProps) {
   return (
     <Link href={`/students/${id}`}>
-      <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-glow">
+      <Card className="h-full transition-colors duration-200 hover:bg-[#fafafc]">
         <CardContent className="flex h-full flex-col gap-5 p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h3 className="text-xl font-semibold text-slate-950">{name}</h3>
-              <p className="mt-1 text-sm text-slate-500">{className}</p>
+              <h3 className="text-xl font-semibold text-[#1d1d1f]">{name}</h3>
+              <p className="mt-1 text-sm text-[#7a7a7a]">{className}</p>
             </div>
             <Badge variant="info">{formatPercent(attendancePercentage)}</Badge>
           </div>
@@ -42,14 +42,14 @@ export function StudentCard({
               { label: "Present", value: presentDays },
               { label: "Absent", value: absentDays }
             ].map((item) => (
-              <div key={item.label} className="rounded-[20px] bg-slate-50 p-3">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-400">{item.label}</p>
-                <p className="mt-2 text-lg font-semibold text-slate-900">{item.value}</p>
+              <div key={item.label} className="rounded-lg border border-[#e0e0e0] bg-white p-3">
+                <p className="text-xs uppercase tracking-[0.22em] text-[#7a7a7a]">{item.label}</p>
+                <p className="mt-2 text-lg font-semibold text-[#1d1d1f]">{item.value}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-auto flex items-center justify-between text-sm text-slate-500">
+          <div className="mt-auto flex items-center justify-between text-sm text-[#7a7a7a]">
             <span>Open full report</span>
             <ChevronRight className="h-4 w-4" />
           </div>

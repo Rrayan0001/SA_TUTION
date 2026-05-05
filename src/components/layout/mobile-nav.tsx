@@ -17,7 +17,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 p-1.5 shadow-2xl backdrop-blur-xl md:hidden">
+    <nav className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-[#e0e0e0] bg-white/95 p-1.5 backdrop-blur-xl md:hidden">
       {links.map((link) => {
         const Icon = link.icon;
         const active = pathname === link.href;
@@ -28,8 +28,8 @@ export function MobileNav() {
             className={cn(
               "flex flex-col items-center gap-1 rounded-full px-5 py-2.5 transition-all duration-200",
               active
-                ? "bg-slate-950 text-white"
-                : "text-slate-500 hover:bg-slate-50 hover:text-slate-950"
+                ? "bg-[#0066cc] text-white"
+                : "text-[#7a7a7a] hover:bg-[#f5f5f7] hover:text-[#1d1d1f]"
             )}
           >
             <Icon className="h-5 w-5" />
@@ -43,12 +43,12 @@ export function MobileNav() {
 
 export function MobileHeader() {
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center border-b border-slate-100 bg-white/80 px-4 backdrop-blur-lg md:hidden">
+    <header className="sticky top-0 z-40 flex h-16 items-center border-b border-[#e0e0e0] bg-white/80 px-4 backdrop-blur-lg md:hidden">
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center rounded-lg bg-slate-950 p-1.5 text-white shadow-sm">
+        <div className="flex items-center justify-center rounded-full bg-[#0066cc] p-1.5 text-white">
           <Orbit className="h-4 w-4" />
         </div>
-        <p className="text-sm font-bold tracking-tight text-slate-950 uppercase">Lumina</p>
+        <p className="text-sm font-semibold tracking-tight text-[#1d1d1f] uppercase">RayanTution</p>
       </div>
     </header>
   );

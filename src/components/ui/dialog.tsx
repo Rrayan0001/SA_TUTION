@@ -18,7 +18,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-slate-950/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out",
+      "fixed inset-0 z-50 bg-black/40 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out",
       className
     )}
     {...props}
@@ -35,13 +35,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-[min(92vw,720px)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-[28px] border border-white/70 bg-white/95 p-6 shadow-2xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out sm:p-8",
+        "fixed left-[50%] top-[50%] z-50 grid w-[min(92vw,760px)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-none border border-[#e0e0e0] bg-white p-6 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out sm:p-8",
         className
       )}
       {...props}
     >
       {children}
-      <DialogClose className="absolute right-5 top-5 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+      <DialogClose className="absolute right-5 top-5 rounded-full p-2 text-[#7a7a7a] transition hover:bg-[#f5f5f7] hover:text-[#1d1d1f]">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogClose>
@@ -70,7 +70,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-xl font-semibold text-slate-900", className)}
+    className={cn("text-xl font-semibold tracking-tight text-[#1d1d1f]", className)}
     {...props}
   />
 ));
@@ -82,7 +82,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-slate-500", className)}
+    className={cn("text-sm text-[#7a7a7a]", className)}
     {...props}
   />
 ));
